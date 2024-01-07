@@ -18,8 +18,11 @@ app.use(cookieParser()); // Cookies Middleware
 
 // Routes
 import userRouter from "./routes/user.routes.js";
+import subscriptionRouter from "./routes/subscription.routes.js";
 
 // Routes Declaration
 app.use("/api/v1/users", userRouter);
+
+app.use("/api/v1/subscriptions", subscriptionRouter);
 
 export { app };
