@@ -22,7 +22,7 @@ const uploadOnCloudinary = async (localFilePath) => {
   }
 };
 
-const removeFromCloudinary = async (url) => {
+const removeFromCloudinary = async (url, resource_type = "auto") => {
   try {
     const publicId = cloudinary
       .url(url, { secure: true })
@@ -30,7 +30,9 @@ const removeFromCloudinary = async (url) => {
       .pop()
       .replace(/\..*/, "");
 
-    return await cloudinary.uploader.destroy(publicId);
+    return await cloudinary.uploader.destroy(publicId, {
+      resource_type,
+    });
   } catch (error) {
     return null;
   }
