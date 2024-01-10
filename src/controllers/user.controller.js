@@ -358,7 +358,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     },
   ]);
   if (!channelInfo?.length) {
-    throw new ApiError(400, "somthing went wrong");
+    throw new ApiError(400, "something went wrong");
   }
 
   return res.status(200).json(new ApiResponse(200, channelInfo, "success"));
