@@ -32,14 +32,6 @@ const getAllVideos = asyncHandler(async (req, res) => {
     });
   }
 
-  const totalDocuments = await Video.countDocuments(
-    aggregation.length
-      ? {
-          $and: aggregation.map((stage) => stage?.$match),
-        }
-      : {}
-  );
-
   if (
     sortBy &&
     ["title", "duration", "views", "isPublished", "createdAt"].includes(sortBy)
@@ -53,13 +45,13 @@ const getAllVideos = asyncHandler(async (req, res) => {
   }
 
   const options = {
-    page,
-    limit,
+    page: +page,
+    limit: +limit,
   };
 
   const pipeline = Video.aggregate(aggregation);
 
-  const videosPaginated = await Video.aggregatePaginate(pipeline, limit);
+  const videosPaginated = await Video.aggregatePaginate(pipeline, options);
 
   res.status(200).json(new ApiResponse(200, videosPaginated));
 });
