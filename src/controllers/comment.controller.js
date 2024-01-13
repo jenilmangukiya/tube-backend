@@ -75,7 +75,7 @@ const updateComment = asyncHandler(async (req, res) => {
 
   // check if the Comment Id is in correct format
   if (!mongoose.Types.ObjectId.isValid(commentId))
-    throw new ApiError(404, "Comment not found");
+    throw new ApiError(404, "Invalid Comment");
 
   if (!content) {
     throw new ApiError(200, "Content is required");
@@ -100,7 +100,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 
   // check if the Comment Id is in correct format
   if (!mongoose.Types.ObjectId.isValid(commentId))
-    throw new ApiError(404, "Comment not found");
+    throw new ApiError(404, "Invalid Comment");
 
   const comment = await Comment.findByIdAndDelete(commentId);
 
