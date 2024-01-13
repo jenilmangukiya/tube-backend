@@ -5,7 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ObjectId } from "mongodb";
 
-// Need to restrict user by USERID
+// TODO: Need to restrict user by USERID
 
 const getVideoComments = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
@@ -17,7 +17,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
   } = req.query;
 
   if (!mongoose.Types.ObjectId.isValid(videoId))
-    throw new ApiError(404, "Video not found");
+    throw new ApiError(404, "Invalid Video");
 
   const options = {
     page: +page,
@@ -31,12 +31,6 @@ const getVideoComments = asyncHandler(async (req, res) => {
     },
     {
       $sort: { [sortBy]: sortOrder },
-    },
-    {
-      $skip: (+page - 1) * +limit,
-    },
-    {
-      $limit: +limit,
     },
   ]);
 
@@ -54,7 +48,7 @@ const addComment = asyncHandler(async (req, res) => {
 
   // check if the Video Id is in correct format
   if (!mongoose.Types.ObjectId.isValid(videoId))
-    throw new ApiError(404, "Video not found");
+    throw new ApiError(404, "Invalid Video");
 
   if (!content) {
     throw new ApiError(400, "Content is Required");

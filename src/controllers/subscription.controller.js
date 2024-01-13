@@ -11,7 +11,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 
   // check if the Channel Id is in correct format
   if (!mongoose.Types.ObjectId.isValid(channelId))
-    throw new ApiError(404, "Channel not found");
+    throw new ApiError(404, "Invalid Channel");
 
   // check if Channel exist
   const doesChannelExist = await User.findById(channelId);
@@ -49,7 +49,7 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 
   // check if the Channel Id is in correct format
   if (!mongoose.Types.ObjectId.isValid(channelId))
-    throw new ApiError(404, "Channel not found");
+    throw new ApiError(404, "Invalid channel");
 
   // check if Channel exist
   const doesChannelExist = await User.findById(channelId);

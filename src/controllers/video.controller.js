@@ -52,27 +52,16 @@ const getAllVideos = asyncHandler(async (req, res) => {
     });
   }
 
-  const skip = (page - 1) * limit;
-  aggregation.push({
-    $skip: skip,
-  });
+  const options = {
+    page,
+    limit,
+  };
 
-  aggregation.push({
-    $limit: parseInt(limit),
-  });
+  const pipeline = Video.aggregate(aggregation);
 
-  const videos = await Video.aggregate(aggregation);
+  const videosPaginated = await Video.aggregatePaginate(pipeline, limit);
 
-  res.status(200).json(
-    new ApiResponse(200, {
-      pagination: {
-        total: totalDocuments,
-        page: page,
-        limit: limit,
-      },
-      data: videos,
-    })
-  );
+  res.status(200).json(new ApiResponse(200, videosPaginated));
 });
 
 const publishVideo = asyncHandler(async (req, res) => {
@@ -135,7 +124,6 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  //TODO: update video details like title, description, thumbnail
 
   // check if the Video Id is in correct format
   if (!mongoose.Types.ObjectId.isValid(videoId))

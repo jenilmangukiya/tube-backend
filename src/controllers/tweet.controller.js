@@ -51,12 +51,6 @@ const getUserTweets = asyncHandler(async (req, res) => {
     {
       $sort: { [sortBy]: sortOrder },
     },
-    {
-      $skip: (+page - 1) * +limit,
-    },
-    {
-      $limit: +limit,
-    },
   ]);
 
   const paginatedTweets = await Tweet.aggregatePaginate(pipeline, options);
