@@ -117,3 +117,13 @@ Certainly! Here's a shorter version:
 - **Get Channel Stats:** `/dashboard/stats` (GET)
 
 ---
+
+## Issue Tracker
+
+If you encounter any issues with the project, please use the GitHub issue tracker to report them. We welcome your feedback!
+
+[**Create a new issue**](https://github.com/jenilmangukiya/tube-backend/issues/new)
+
+## Contributing
+
+If you wish to contribute to this project, please feel free to contribute.
