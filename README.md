@@ -2,6 +2,9 @@
 
 Tube Backend is a Node.js Express application with MongoDB using Mongoose, designed to provide a backend API for managing YouTube-like functionalities. This project includes various controllers for handling comments, likes, tweets, users, dashboard, subscriptions, videos, playlists, health checks, and more.
 
+![tube backend schema](./public/db_schema.png)
+Link: [https://app.eraser.io/workspace/JRczTFa0G4do8w2TlLoW](https://app.eraser.io/workspace/JRczTFa0G4do8w2TlLoW)
+
 ## Getting Started
 
 These instructions will help you set up the project on your local machine for development and testing purposes.
