@@ -12,6 +12,7 @@ import jwt from "jsonwebtoken";
 const cookiesOptions = {
   httpOnly: true,
   secure: true,
+  maxAge: 24 * 60 * 60 * 1000, // For 1d
 };
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -126,7 +127,10 @@ const loginUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .cookie("accessToken", accessToken, cookiesOptions)
-    .cookie("refreshToken", refreshToken, cookiesOptions)
+    .cookie("refreshToken", refreshToken, {
+      ...cookiesOptions,
+      maxAge: 10 * 24 * 60 * 60 * 1000, // For 10d
+    })
     .json(
       new ApiResponse(
         200,
@@ -149,6 +153,12 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     process.env.REFRESH_TOKEN_SECRET
   );
 
+  const currentTimeInSeconds = Math.floor(Date.now() / 1000); // Convert to seconds
+
+  if (decodedToken?.exp < currentTimeInSeconds) {
+    throw new ApiError(401, "Refresh Token is expired");
+  }
+
   try {
     const user = await User.findById(decodedToken?._id);
 
@@ -167,7 +177,10 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     res
       .status(200)
       .cookie("accessToken", accessToken, cookiesOptions)
-      .cookie("refreshToken", refreshToken, cookiesOptions)
+      .cookie("refreshToken", refreshToken, {
+        ...cookiesOptions,
+        maxAge: 10 * 24 * 60 * 60 * 1000, // For 10d
+      })
       .json(
         new ApiResponse(
           200,
