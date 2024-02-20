@@ -161,19 +161,25 @@ const deleteVideo = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Invalid Video");
 
   const videoDetails = await Video.findById(videoId);
-  console.log("videoDetails", videoDetails);
   if (!videoDetails) {
     throw new ApiError(404, "video Not found");
   }
-  console.log("videoDetails", videoDetails);
+
+  if (videoDetails?.owner !== req.user._id) {
+    throw new ApiError(401, "unAuthorized to Delete Video");
+  }
+
+  const deletedVideo = await Video.findByIdAndDelete(videoId);
 
   // TODO: need to improve more
-  await removeFromCloudinary(videoDetails?.thumbnail);
-  await removeFromCloudinary(videoDetails?.videoFile, "video");
+  if (deletedVideo?.thumbnail)
+    await removeFromCloudinary(deletedVideo?.thumbnail);
+  if (deletedVideo?.videoFile)
+    await removeFromCloudinary(deletedVideo?.videoFile, "video");
 
   res
     .status(200)
-    .json(new ApiResponse(200, videoDetails, "Deleted Successfully"));
+    .json(new ApiResponse(200, deletedVideo, "Deleted Successfully"));
 });
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
