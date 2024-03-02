@@ -10,7 +10,6 @@ import { ApiResponse } from "./../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 
 const cookiesOptions = {
-  httpOnly: true,
   secure: true,
   maxAge: 24 * 60 * 60 * 1000, // For 1d
 };
@@ -53,14 +52,13 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // Check for avatar path and upload it to cloudinary
   let avatar;
-  const avatarLocalPath = req.files?.avatar?.[0]?.path;
-  if (!avatarLocalPath) {
-    throw new ApiError(400, "Avatar field is required");
-  } else {
+  if (
+    req.files &&
+    Array.isArray(req.files?.avatar) &&
+    req.files.avatar.length > 0
+  ) {
+    const avatarLocalPath = req.files?.avatar?.[0]?.path;
     avatar = await uploadOnCloudinary(avatarLocalPath);
-    if (!avatar) {
-      throw new ApiError(400, "Avatar field is required");
-    }
   }
 
   // Check for cover Image
@@ -79,7 +77,7 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username.toLowerCase(),
     fullName,
     email,
-    avatar: avatar.url,
+    avatar: avatar?.url || "",
     coverImage: coverImage?.url || "",
     password,
   });
@@ -95,7 +93,13 @@ const registerUser = asyncHandler(async (req, res) => {
 
   return res
     .status(201)
-    .json(new ApiResponse(200, createdUser, "User registered Successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        { user: createdUser },
+        "User registered Successfully"
+      )
+    );
 });
 
 const loginUser = asyncHandler(async (req, res) => {
